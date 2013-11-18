@@ -5,7 +5,9 @@ use Riemann\Client;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$riemannClient = Client::create('localhost', 5555);
+date_default_timezone_set('UTC');
+
+$riemannClient = Client::create('127.0.0.1', 5555);
 
 $eventBuilder = $riemannClient->getEventBuilder();
 $eventBuilder->setService("php stuff");
@@ -16,7 +18,8 @@ $eventBuilder->sendEvent();
 $eventBuilder = $riemannClient->getEventBuilder();
 $eventBuilder->setService("php stuff2");
 $eventBuilder->setMetric(mt_rand(99, 199));
-$eventBuilder->addTag('meter');
+$eventBuilder->addTag('core');
+$eventBuilder->addTags(array('rate','meter'));
 $eventBuilder->sendEvent();
 
 $riemannClient->flush();

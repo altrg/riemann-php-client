@@ -8,7 +8,7 @@ class EventBuilderFactory
         return new EventBuilder(
             new DateTimeProvider(),
             php_uname('n'),
-            array('www')
+            array()
         );
     }
 }

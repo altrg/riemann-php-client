@@ -10,6 +10,9 @@ class EventBuilder
     private $tags;
     private $service;
     private $metric = 1;
+    private $state;
+    private $description;
+    private $ttl;
 
     /**
      * @var Client
@@ -44,6 +47,30 @@ class EventBuilder
         return $this;
     }
 
+    public function addTags($tags)
+    {
+        $this->tags = array_merge($this->tags, $tags);
+        return $this;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function setState($state)
+    {
+        $this->state = $state;
+        return $this;
+    }
+
+    public function setTTL($ttl)
+    {
+        $this->state = $ttl;
+        return $this;
+    }
+
     public function build()
     {
         if (!$this->service) {
@@ -54,6 +81,8 @@ class EventBuilder
         $event->time = $this->dateTimeProvider->now()->getTimestamp();
         $event->service = $this->service;
         $event->tags = $this->tags;
+        $event->state = $this->state;
+        $event->description = $this->description;
 
         $floatMetric = (float)$this->metric;
         $event->metric_f = $floatMetric;
@@ -61,6 +90,10 @@ class EventBuilder
             $event->metric_sint64 = $this->metric;
         } else {
             $event->metric_d = $floatMetric;
+        }
+
+        if (is_numeric($this->ttl)) {
+            $event->ttl = $this->ttl;
         }
 
         return $event;
